@@ -95,7 +95,7 @@ export default function Home() {
           <span className="mt-6 mb-3">ในอีก</span>
           <div className="flex items-center justify-center">
             <Countdown
-              date={new Date("2025-12-16T00:00:00")}
+              date={new Date("2025-12-16T19:30:00")}
               renderer={renderer}
             />
           </div>
