@@ -1,0 +1,15 @@
+node_modules
+.next
+.DS_Store
+.git
+.gitignore
+.env
+.env.local
+.vscode
+dist
+coverage
+.idea
+npm-debug.log
+**/node_modules
+public/*.psd
+public/*.ai

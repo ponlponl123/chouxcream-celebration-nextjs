@@ -1,0 +1,36 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+@plugin "daisyui";
+
+*:not([apply-default-fonts="false"]) {
+  font-family: "Itim", "Darumadrop One", "Inter", sans-serif;
+  letter-spacing: 0.08rem;
+}
+
+.countdown {
+  & > * {
+    &:before,
+    &:after {
+      font-family: monospace;
+    }
+  }
+}
+
+html,
+body,
+#__next {
+  height: 100%;
+}
+
+#smooth-wrapper {
+  height: 100%;
+}
+
+#smooth-content {
+  min-height: 100%;
+  will-change: transform;
+}
+
+.heroui-ripple {
+  filter: blur(16px);
+}
