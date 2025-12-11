@@ -1,6 +1,7 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
+  debug: true,
   name: "ChouxCream シュークリーム 2025 Celebration",
   description: "A celebratory gift for ChouxCream シュークリーム 2025.",
   links: {

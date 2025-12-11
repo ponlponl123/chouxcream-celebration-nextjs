@@ -39,14 +39,12 @@ export default function RootLayout({
           "min-h-screen text-foreground bg-background font-sans antialiased",
           fontSans.variable,
           fontThai.variable,
-          fontJapanese.variable,
+          fontJapanese.variable
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
-            <main className="container mx-auto max-w-7xl pt-16 px-6 grow">
-              {children}
-            </main>
+          <div className="relative flex flex-col min-h-screen">
+            {children}
             <footer className="w-full flex items-center justify-center py-4">
               <Link
                 isExternal
