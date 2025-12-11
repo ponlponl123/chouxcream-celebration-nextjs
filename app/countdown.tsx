@@ -129,7 +129,7 @@ export default function Home({
                       {days}
                     </span>
                   </span>
-                  days
+                  วัน
                 </motion.div>
               )}
               {hours > 0 && (
@@ -152,7 +152,7 @@ export default function Home({
                       {hours}
                     </span>
                   </span>
-                  hours
+                  ชั่วโมง
                 </motion.div>
               )}
               {minutes > 0 && (
@@ -175,7 +175,7 @@ export default function Home({
                       {minutes}
                     </span>
                   </span>
-                  min
+                  นาที
                 </motion.div>
               )}
               <div className="flex flex-col">
@@ -189,7 +189,7 @@ export default function Home({
                     {seconds}
                   </span>
                 </span>
-                sec
+                วินาที
               </div>
             </AnimatePresence>
           </div>
@@ -198,7 +198,7 @@ export default function Home({
         <h3 className="mt-6">
           {days + hours + minutes + seconds < 30
             ? "ไกล้จะถึงเวลาแล้ว!"
-            : "ไว้กลับมาใหม่นะ!"}
+            : "เหมือนว่าปาร์ตี้จะยังไม่เริ่มนะ!"}
         </h3>
       </motion.div>
     );
