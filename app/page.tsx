@@ -4,9 +4,13 @@ import { siteConfig } from "@/config/site";
 
 import Page2025 from "./recap-2025/_page";
 
-const now = new Date();
-const countdown = new Date(`${now.getFullYear()}-12-16T20:30:00`);
-// const countdown = new Date("2025-12-12T00:42:00");
+// set specific timezone for countdown
+
+const now_utc = new Date();
+const now =
+  now_utc.getTime() + new Date().getTimezoneOffset() * 60000 + 9 * 3600000;
+// const countdown = new Date(`${new Date(now).getFullYear()}-12-16T20:30:00`);
+const countdown = new Date("2025-12-12T13:01:00");
 
 function Page() {
   const now = new Date();
