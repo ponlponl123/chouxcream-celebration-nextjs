@@ -9,8 +9,8 @@ import Page2025 from "./recap-2025/_page";
 const now_utc = new Date();
 const now =
   now_utc.getTime() + new Date().getTimezoneOffset() * 60000 + 9 * 3600000;
-// const countdown = new Date(`${new Date(now).getFullYear()}-12-16T20:30:00`);
-const countdown = new Date("2025-12-12T18:00:00");
+const countdown = new Date(`${new Date(now).getFullYear()}-12-16T21:00:00`);
+// const countdown = new Date("2025-12-12T20:36:00");
 
 function Page() {
   const now = new Date();

@@ -7,7 +7,8 @@
   letter-spacing: 0.08rem;
 }
 
-*:not([apply-default-transitions="false"]) {
+.body:not([apply-page-default-transitions="false"]),
+.body:not([apply-page-default-transitions="false"]) *:not([apply-default-transitions="false"]) {
   transition: .32s cubic-bezier(0.215, 0.610, 0.355, 1);
 }
 
