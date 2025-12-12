@@ -7,6 +7,10 @@
   letter-spacing: 0.08rem;
 }
 
+*:not([apply-default-transitions="false"]) {
+  transition: .32s cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
 .countdown {
   & > * {
     &:before,
@@ -33,4 +37,14 @@ body,
 
 .heroui-ripple {
   filter: blur(16px);
+}
+
+.mailcard {
+  background: repeating-linear-gradient(45deg,
+    rgb(255, 255, 255, 0.12),
+    rgb(255, 255, 255, 0.12) 1rem,
+    transparent 1rem,
+    transparent 2rem
+  ) rgb(255, 205, 159);
+  border-radius: 4px;
 }

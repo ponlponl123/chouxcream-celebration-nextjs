@@ -41,6 +41,9 @@ export default function RootLayout({
           fontThai.variable,
           fontJapanese.variable
         )}
+        style={{
+          scrollbarWidth: "thin",
+        }}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col min-h-screen">
