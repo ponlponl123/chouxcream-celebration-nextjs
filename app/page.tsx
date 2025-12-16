@@ -4,13 +4,23 @@ import { siteConfig } from "@/config/site";
 
 import Page2025 from "./recap-2025/_page";
 
-// set specific timezone for countdown
+const getBKKDate = () => {
+  const now = new Date();
+  return new Date(now.toLocaleString("en-US", { timeZone: "Asia/Bangkok" }));
+};
 
-const now_utc = new Date();
-const now =
-  now_utc.getTime() + new Date().getTimezoneOffset() * 60000 + 9 * 3600000;
-const countdown = new Date(`${new Date(now).getFullYear()}-12-16T21:00:00`);
-// const countdown = new Date("2025-12-12T20:36:00");
+const getCountdownDate = () => {
+  const envTime = process.env.NEXT_PUBLIC_COUNTDOWN_TIME;
+  if (envTime) {
+    const date = new Date(envTime);
+    if (!isNaN(date.getTime())) return date;
+  }
+  const bkkNow = getBKKDate();
+  const year = bkkNow.getFullYear();
+  return new Date(`${year}-12-16T22:50:00+07:00`);
+};
+
+const countdown = getCountdownDate();
 
 function Page() {
   const now = new Date();
