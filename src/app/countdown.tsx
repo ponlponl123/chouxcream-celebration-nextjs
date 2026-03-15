@@ -269,7 +269,7 @@ export default function Home({
                     transition={{ duration: 1, delay: !isCompleted ? 0.2 : 0 }}
                     className="mt-3"
                     data-apply-default-transitions="false"
-                    href="https://www.youtube.com/@ChouxCreamii"
+                    href="https://discord.gg/W4WwqRXSVN"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
