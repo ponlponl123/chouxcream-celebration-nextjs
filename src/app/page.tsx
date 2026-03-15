@@ -2,7 +2,7 @@ import React from "react";
 import Countdown from "@/app/countdown";
 import { siteConfig } from "@/config/site";
 
-import Page2025 from "./recap-2025/_page";
+import RecapPage from "./recap-2026/_page";
 
 const getBKKDate = () => {
   const now = new Date();
@@ -31,16 +31,12 @@ function Page() {
   ) {
     return (
       <main className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
-        <Countdown
-          title="シュークリーム"
-          description="2 Year's Anniversary Celebration 🎉"
-          date={countdown}
-        />
+        <Countdown title="シュークリーム" date={countdown} />
       </main>
     );
   }
 
-  return <Page2025 />;
+  return <RecapPage />;
 }
 
 export default Page;

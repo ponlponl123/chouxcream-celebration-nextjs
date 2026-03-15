@@ -7,6 +7,7 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontJapanese, fontSans, fontThai } from "@/config/fonts";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: {
@@ -39,7 +40,7 @@ export default function RootLayout({
           "min-h-screen text-foreground bg-background font-sans antialiased",
           fontSans.variable,
           fontThai.variable,
-          fontJapanese.variable
+          fontJapanese.variable,
         )}
         style={{
           scrollbarWidth: "thin",
@@ -48,17 +49,7 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col min-h-screen">
             {children}
-            <footer className="w-full flex items-center justify-center py-4">
-              <Link
-                isExternal
-                className="flex items-center gap-1 text-current/60 text-xs opacity-40"
-                href="https://ponlponl123.com"
-                title="ponlponl123.com homepage"
-              >
-                <span className="text-default-300">Made with 💛 by</span>
-                <p className="text-current">Ponlponl123</p>
-              </Link>
-            </footer>
+            <Footer />
           </div>
         </Providers>
       </body>
