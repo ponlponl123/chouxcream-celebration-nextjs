@@ -41,9 +41,9 @@ function Footer() {
           key={index}
           href={index === totalRecapCount - 1 ? "/" : `/recap-${2025 + index}`}
           className={twMerge(
-            "bg-default-400/10 text-default-400 px-1 py-0.5 rounded-sm text-sm",
+            "bg-amber-400/10 text-amber-400 px-1 py-0.5 rounded-sm text-sm",
             RecapYear === String(2025 + index) &&
-              "bg-default-400 text-white pointer-events-none",
+              "bg-amber-400 text-white pointer-events-none",
           )}
         >
           <span>{2025 + index}</span>
@@ -65,12 +65,12 @@ function Footer() {
       </div>
       <footer
         className={twMerge(
-          "w-full flex max-sm:flex-col sm:items-center sm:justify-between p-8 gap-8",
+          "w-full flex max-md:flex-col md:items-center md:justify-between p-8 gap-8",
           visible ? "opacity-100" : "opacity-0 pointer-events-none",
           "transition-opacity duration-500",
         )}
       >
-        <div className="flex-1 min-w-0 flex max-sm:flex-col sm:items-center gap-6">
+        <div className="flex-1 min-w-0 flex max-md:flex-col md:items-center gap-6">
           <Link
             isExternal
             className="flex items-center gap-1 text-current text-lg"
@@ -98,7 +98,7 @@ function Footer() {
         <div className="flex-1 min-w-0 flex flex-wrap items-center justify-center gap-4 max-xl:hidden">
           <RecapSelector />
         </div>
-        <div className="flex-1 min-w-0 flex items-center sm:justify-end gap-6">
+        <div className="lg:flex-1 min-w-0 flex items-center md:justify-end gap-6">
           <Link
             isExternal
             className="flex items-center gap-1 text-current text-lg"
