@@ -40,7 +40,7 @@ export default function RootLayout({
     <html
       suppressHydrationWarning
       lang="en"
-      className={cn("font-mono", jetbrainsMono.variable)}
+      className={cn("font-mono dark", jetbrainsMono.variable)}
     >
       <head />
       <body
