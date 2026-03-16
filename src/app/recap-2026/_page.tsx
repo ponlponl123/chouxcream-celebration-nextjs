@@ -1,31 +1,37 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   TConductorInstance,
   TDecorateOptionsFn,
 } from "react-canvas-confetti/dist/types/index";
+import Realistic from "react-canvas-confetti/dist/presets/realistic";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
-import { AnimatePresence, motion } from "framer-motion";
 import { GitMergeIcon, HeartIcon } from "@phosphor-icons/react/dist/ssr";
-import gsap from "gsap";
-import { Button } from "@heroui/button";
-import { twMerge } from "tailwind-merge";
+import { useCustomCursor } from "@/context/customCursor";
+import { AnimatePresence, motion } from "framer-motion";
 import { SplitText } from "gsap/SplitText";
+import { twMerge } from "tailwind-merge";
+import { Button } from "@heroui/button";
+import confetti from "canvas-confetti";
+import gsap from "gsap";
 
 import "@/styles/recap-2026.css";
 
 gsap.registerPlugin(SplitText);
 
 function Page() {
+  const { setCustomCursor, setForceRotation } = useCustomCursor();
+  const introTlRef = useRef<any>(null);
   const introVideoRef = useRef<HTMLVideoElement>(null);
   const controller = useRef<TConductorInstance | null>(null);
+  const sendHeartButtonRef = useRef<HTMLButtonElement>(null);
   const [isIntroPlayed, setIsIntroPlayed] = React.useState(false);
-  const [contentIsReady, setContentIsReady] = React.useState(false);
-  const [mailDearWritten, setMailDearWritten] = React.useState(false);
-  const [mailContentWritten, setMailContentWritten] = React.useState(false);
-  const [mailClosingWritten, setMailClosingWritten] = React.useState(false);
-  const [mailHovered, setMailHovered] = React.useState(false);
-  const [mailOpened, setMailOpened] = React.useState(false);
+  const [isContentReady, setIsContentReady] = React.useState(false);
+  const [isMailDearWritten, setIsMailDearWritten] = React.useState(false);
+  const [isMailContentWritten, setIsMailContentWritten] = React.useState(false);
+  const [isMailClosingWritten, setIsMailClosingWritten] = React.useState(false);
+  const [isMailHovered, setIsMailHovered] = React.useState(false);
+  const [isMailOpened, setIsMailOpened] = React.useState(false);
   const [hearts, setHearts] = React.useState<
     { id: number; x: number; color: string }[]
   >([]);
@@ -33,17 +39,24 @@ function Page() {
     name: string;
     img: string;
   } | null>(null);
+  const sendHeartButtonRect = useMemo(() => {
+    return sendHeartButtonRef.current?.getBoundingClientRect();
+  }, [sendHeartButtonRef]);
   const hasTransitionedRef = useRef(false);
 
-  const handleSendLove = () => {
-    const id = Date.now();
-    const x = Math.random() * 100 - 50;
-    const colors = [
+  const colors = React.useMemo(
+    () => [
       "text-red-500",
       "text-pink-500",
       "text-purple-500",
       "text-yellow-500",
-    ];
+    ],
+    [],
+  );
+
+  const handleSendLove = React.useCallback(() => {
+    const id = Date.now();
+    const x = Math.random() * 100 - 50;
     const color = colors[Math.floor(Math.random() * colors.length)];
 
     setHearts((prev) => [...prev, { id, x, color }]);
@@ -51,20 +64,75 @@ function Page() {
     setTimeout(() => {
       setHearts((prev) => prev.filter((h) => h.id !== id));
     }, 2000);
-  };
+  }, [colors]);
 
-  const onInitHandler = ({ conductor }: { conductor: TConductorInstance }) => {
-    controller.current = conductor;
-    if (!controller.current) return;
+  const onInitHandler = React.useCallback(
+    ({ conductor }: { conductor: TConductorInstance }) => {
+      controller.current = conductor;
+      if (!controller.current) return;
 
-    controller.current.run({ speed: 3, duration: 3000, delay: 2600 });
-  };
+      controller.current.run({ speed: 3, duration: 3000, delay: 2600 });
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (isMailClosingWritten) {
+      let intervalId: number | null = null;
+      const timeoutId = window.setTimeout(() => {
+        const end = Date.now() + 3 * 1000;
+        const colors = [
+          "#26ccff",
+          "#a25afd",
+          "#ff5e7e",
+          "#88ff5a",
+          "#fcff42",
+          "#ffa62d",
+          "#ff36ff",
+        ];
+        const particleCount = 24; // fire fewer particles for a lighter rainbow
+        const intervalMs = 140; // fire less often than a frame to reduce overall intensity
+        const originY = 0.56;
+
+        intervalId = window.setInterval(() => {
+          if (Date.now() > end) {
+            if (intervalId) window.clearInterval(intervalId);
+            return;
+          }
+
+          confetti({
+            particleCount,
+            angle: 60,
+            spread: 96,
+            startVelocity: 60,
+            origin: { x: 0, y: originY },
+            colors,
+          });
+          confetti({
+            particleCount,
+            angle: 120,
+            spread: 96,
+            startVelocity: 60,
+            origin: { x: 1, y: originY },
+            colors,
+          });
+        }, intervalMs);
+      }, 3600);
+
+      return () => {
+        window.clearTimeout(timeoutId);
+        if (intervalId) window.clearInterval(intervalId);
+      };
+    }
+  }, [isMailClosingWritten]);
 
   useEffect(() => {
     const introVideo = introVideoRef.current;
     if (!introVideo) return;
-    let tl = gsap.timeline();
-    tl.to("body", { overflow: "hidden", duration: 0 });
+
+    introTlRef.current = gsap.timeline();
+    introTlRef.current.to("body", { overflow: "hidden", duration: 0 });
+
     introVideo.play().catch((error) => {
       console.error("Error playing intro video:", error);
     });
@@ -76,19 +144,22 @@ function Page() {
 
       introVideo.classList.add("hidden");
       setTimeout(() => {
-        tl.to("body", { overflow: "auto", duration: 0 });
-        setContentIsReady(true);
+        introTlRef.current?.to("body", { overflow: "auto", duration: 0 });
+        setIsContentReady(true);
       }, 3000);
     };
+
     introVideo.addEventListener("ended", handleIntroEnded);
 
     return () => {
       introVideo.removeEventListener("ended", handleIntroEnded);
+      introTlRef.current?.kill?.();
+      introTlRef.current = null;
     };
   }, []);
 
   useEffect(() => {
-    if (contentIsReady) {
+    if (isContentReady) {
       const hbd_text = SplitText.create(".text-hbd-title", {
         type: "chars",
       });
@@ -127,81 +198,81 @@ function Page() {
         anniversary_text.revert();
       };
     }
-  }, [contentIsReady]);
+  }, [isContentReady]);
 
   useEffect(() => {
-    if (mailContentWritten) {
-      const split = SplitText.create(".closing-thank-you-message", {
-        type: "chars",
-      });
-      gsap
-        .from(split.chars, {
-          duration: 1,
-          x: 3,
-          filter: "blur(4px)",
-          autoAlpha: 0,
-          stagger: 0.06,
-          delay: 1.48,
-        })
-        .then(() => {
-          setMailClosingWritten(true);
+    if (!isMailOpened) return;
+
+    let isActive = true;
+    let dearSplit: any = null;
+    let thankSplit: any = null;
+    let closingSplit: any = null;
+
+    const runSequence = async () => {
+      const runAnim = (target: any, vars: any) =>
+        new Promise<void>((resolve) => {
+          gsap.from(target, { ...vars, onComplete: () => resolve() });
         });
-      return () => {
-        split.revert();
-      };
-    }
-  }, [mailContentWritten]);
-  useEffect(() => {
-    if (mailDearWritten) {
-      const split = SplitText.create(".thank-you-message", {
-        type: "chars",
-      });
-      gsap
-        .from(split.chars, {
-          duration: 1,
-          y: 3,
-          filter: "blur(4px)",
-          autoAlpha: 0,
-          stagger: 0.06,
-          delay: 1.64,
-        })
-        .then(() => {
-          setMailContentWritten(true);
+
+      try {
+        dearSplit = SplitText.create(".dear-thank-you-message", {
+          type: "chars",
         });
-      return () => {
-        split.revert();
-      };
-    }
-  }, [mailDearWritten]);
-  useEffect(() => {
-    if (mailOpened) {
-      const split = SplitText.create(".dear-thank-you-message", {
-        type: "chars",
-      });
-      gsap
-        .from(split.chars, {
+        thankSplit = SplitText.create(".thank-you-message", { type: "chars" });
+        closingSplit = SplitText.create(".closing-thank-you-message", {
+          type: "chars",
+        });
+        await runAnim(dearSplit.chars, {
           duration: 1,
           y: 6,
           filter: "blur(4px)",
           autoAlpha: 0,
           stagger: 0.12,
           delay: 0.64,
-        })
-        .then(() => {
-          setMailDearWritten(true);
         });
-      return () => {
-        split.revert();
-      };
-    }
-  }, [mailOpened]);
+        if (!isActive) return;
+        setIsMailDearWritten(true);
+        await runAnim(thankSplit.chars, {
+          duration: 1,
+          y: 3,
+          filter: "blur(4px)",
+          autoAlpha: 0,
+          stagger: 0.06,
+          delay: 1.64,
+        });
+        if (!isActive) return;
+        setIsMailContentWritten(true);
+        await runAnim(closingSplit.chars, {
+          duration: 1,
+          x: 3,
+          filter: "blur(4px)",
+          autoAlpha: 0,
+          stagger: 0.06,
+          delay: 1.48,
+        });
+        if (!isActive) return;
+        setIsMailClosingWritten(true);
+      } catch (e) {
+        // swallow animation errors when component unmounts
+      }
+    };
 
-  const openMail = () => {
-    setMailOpened(true);
-  };
+    runSequence();
+
+    return () => {
+      isActive = false;
+      try {
+        dearSplit?.revert();
+        thankSplit?.revert();
+        closingSplit?.revert();
+      } catch (e) {
+        // noop
+      }
+    };
+  }, [isMailOpened]);
 
   return (
-    <div className={twMerge("contents", mailHovered && "mailcard-hovered")}>
+    <div className={twMerge("contents", isMailHovered && "mailcard-hovered")}>
       <AnimatePresence mode="wait">
         <div
           key="video-container"
@@ -466,7 +537,7 @@ function Page() {
             <div className="absolute top-0 right-[27vw] translate-1/2 w-[64vw] h-[32vh] -rotate-32 pointer-events-none bg-radial to-transparent from-amber-500/60 brightness-125 bg-blend-lighten blur-[128px]" />
           </div>
         </div>
-        {contentIsReady && (
+        {isContentReady && (
           <motion.main
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -502,7 +573,7 @@ function Page() {
             </motion.span>
           </motion.main>
         )}
-        {contentIsReady && (
+        {isContentReady && (
           <>
             <section
               key="section-stats"
@@ -586,12 +657,52 @@ function Page() {
             >
               <div
                 className="relative w-[calc(100%-6rem)] max-w-2xl mx-auto"
-                onMouseEnter={() => setMailHovered(true)}
-                onMouseLeave={() => setMailHovered(false)}
+                onMouseEnter={() => {
+                  setIsMailHovered(true),
+                    setForceRotation(0),
+                    setCustomCursor(
+                      <motion.div
+                        animate={{
+                          scale: [0.8, 1, 0.8],
+                          rotate: [0, 5, -5, 0],
+                        }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        <svg
+                          width="40"
+                          height="40"
+                          viewBox="0 0 40 40"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="text-amber-500"
+                        >
+                          <motion.path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                            fill="currentColor"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{
+                              duration: 0.8,
+                              repeat: Infinity,
+                              ease: "easeInOut",
+                            }}
+                          />
+                        </svg>
+                      </motion.div>,
+                    );
+                }}
+                onMouseLeave={() => {
+                  setIsMailHovered(false),
+                    setForceRotation(undefined),
+                    setCustomCursor(undefined);
+                }}
               >
                 <motion.div
                   className="mailcard absolute max-w-2xl w-full h-full group cursor-pointer apply-default-transition"
-                  onClick={openMail}
+                  onClick={() => setIsMailOpened(true)}
                 >
                   <div className="absolute w-full h-full overflow-hidden rounded-lg">
                     <div className="w-full group-hover:-translate-y-4 transition-transform duration-300">
@@ -615,7 +726,7 @@ function Page() {
                 <motion.div
                   className={twMerge(
                     "mailcard relative max-w-2xl p-3 sm:p-6 w-full h-max apply-default-transition",
-                    !mailOpened && "opacity-0 pointer-events-none",
+                    !isMailOpened && "opacity-0 pointer-events-none",
                   )}
                 >
                   <HeartIcon
@@ -629,39 +740,33 @@ function Page() {
                       initial={{ opacity: 0, y: -12, filter: "blur(4px)" }}
                       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                       transition={{ duration: 1 }}
-                      key={"thank-you-title-" + mailOpened}
+                      key={"thank-you-title-" + isMailOpened}
                     >
                       Thank You!
                     </motion.h3>
                     <div className="flex items-center justify-start gap-1 mb-2">
-                      <motion.span
-                        className="text-base dear-thank-you-message"
-                        initial={{ opacity: 0, y: -12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.64, delay: 0.16 }}
-                        key={"dear-thank-you-message-" + mailOpened}
-                      >
+                      <span className="text-base dear-thank-you-message">
                         ถึง
-                      </motion.span>
+                      </span>
                       <motion.a
                         href="https://www.youtube.com/@ChouxCreamii"
                         target="_blank"
                         rel="noreferrer"
                         className="text-amber-600 font-semibold hover:underline"
                         initial={{ opacity: 0 }}
-                        animate={mailDearWritten ? { opacity: 1 } : {}}
-                        transition={{ duration: 0.64, delay: 0.64 }}
-                        key={"dear-thank-you-link-" + mailDearWritten}
+                        animate={isMailDearWritten ? { opacity: 1 } : {}}
+                        transition={{ duration: 0.64, delay: 0.42 }}
+                        key={"dear-thank-you-link-" + isMailDearWritten}
                       >
                         ChouxCreamii
                       </motion.a>
                     </div>
-                    <motion.div
-                      className="text-base mb-2 thank-you-message"
-                      initial={{ opacity: 0, y: -12 }}
-                      animate={mailDearWritten ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.64, delay: 0.16 }}
-                      key={"thank-you-message-" + mailOpened}
+                    <div
+                      className={twMerge(
+                        "text-base mb-2 thank-you-message",
+                        !isMailDearWritten && "opacity-0",
+                      )}
+                      key={"thank-you-message-" + isMailContentWritten}
                     >
                       ตลอดปี 2026 ที่ผ่านมา
                       ขอบคุณสำหรับรอยยิ้มและเสียงหัวเราะที่มอบให้กันเสมอมา
@@ -670,17 +775,17 @@ function Page() {
                       ขอให้มีความสุขมากๆ และสร้างสรรค์ผลงานดีๆ
                       <br />
                       ให้พวกเราได้ชมกันต่อไปนะ!
-                    </motion.div>
+                    </div>
                     <br />
-                    <motion.span
-                      className="text-base mb-2 closing-thank-you-message"
-                      initial={{ opacity: 0, y: -12 }}
-                      animate={mailContentWritten ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.64, delay: 0.16 }}
-                      key={"closing-thank-you-message-" + mailContentWritten}
+                    <span
+                      className={twMerge(
+                        "text-base mb-2 closing-thank-you-message",
+                        !isMailContentWritten && "opacity-0",
+                      )}
+                      key={"closing-thank-you-message-" + isMailClosingWritten}
                     >
                       คอยเป็นกำลังใจและติดตามเสมอ
-                    </motion.span>
+                    </span>
                     <br />
                     <motion.a
                       href="https://ponlponl123.com"
@@ -688,23 +793,33 @@ function Page() {
                       rel="noreferrer"
                       className="text-amber-600 font-semibold hover:underline"
                       initial={{ opacity: 0, y: -12 }}
-                      animate={mailClosingWritten ? { opacity: 1, y: 0 } : {}}
+                      animate={isMailClosingWritten ? { opacity: 1, y: 0 } : {}}
                       transition={{ duration: 0.64, delay: 1 }}
-                      key={"closing-thank-you-link-" + mailClosingWritten}
+                      key={"closing-thank-you-link-" + isMailClosingWritten}
                     >
                       ポーン
                     </motion.a>
                   </div>
                 </motion.div>
               </div>
+              <motion.span
+                className="mt-4"
+                initial={{ opacity: 0, y: -12 }}
+                animate={isMailClosingWritten ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.64, delay: 2.64 }}
+                key={"after-mail-hbd-" + isMailClosingWritten}
+              >
+                สุขสันต์วันเกิดนะ
+              </motion.span>
               <Button
                 size="sm"
                 color="warning"
-                className="mt-8"
+                className="mt-4"
                 radius="full"
                 variant="flat"
                 isIconOnly
                 onPress={handleSendLove}
+                ref={sendHeartButtonRef}
               >
                 💛
               </Button>

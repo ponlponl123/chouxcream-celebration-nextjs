@@ -8,8 +8,11 @@ import {
   XLogoIcon,
   YoutubeLogoIcon,
 } from "@phosphor-icons/react/dist/ssr";
+
+import { Dock, DockIcon } from "@/components/ui/dock";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 function Footer() {
   const pathname = usePathname();
@@ -99,46 +102,54 @@ function Footer() {
           <RecapSelector />
         </div>
         <div className="lg:flex-1 min-w-0 flex items-center md:justify-end gap-6">
-          <Link
-            isExternal
-            className="flex items-center gap-1 text-current text-lg"
-            href="https://discord.gg/W4WwqRXSVN"
-            title="ChouxCreamii Discord server"
-          >
-            <DiscordLogoIcon weight="fill" size={24} />
-          </Link>
-          <Link
-            isExternal
-            className="flex items-center gap-1 text-current text-lg"
-            href="https://x.com/ChouxCreamii"
-            title="ChouxCreamii Twitter"
-          >
-            <XLogoIcon weight="regular" size={24} />
-          </Link>
-          <Link
-            isExternal
-            className="flex items-center gap-1 text-current text-lg"
-            href="https://www.tiktok.com/@chouxcreamii"
-            title="ChouxCreamii TikTok"
-          >
-            <TiktokLogoIcon weight="fill" size={24} />
-          </Link>
-          <Link
-            isExternal
-            className="flex items-center gap-1 text-current text-lg"
-            href="https://www.facebook.com/ChouxCreamii"
-            title="ChouxCreamii Facebook"
-          >
-            <FacebookLogoIcon weight="fill" size={24} />
-          </Link>
-          <Link
-            isExternal
-            className="flex items-center gap-1 text-current text-lg"
-            href="https://www.youtube.com/@ChouxCreamii"
-            title="ChouxCreamii YouTube channel"
-          >
-            <YoutubeLogoIcon weight="fill" size={24} />
-          </Link>
+          <Dock direction="middle" className="m-0 border-0 p-0">
+            {[
+              {
+                href: "https://discord.gg/W4WwqRXSVN",
+                title: "ChouxCreamii Discord server",
+                icon: <DiscordLogoIcon weight="fill" size={24} />,
+              },
+              {
+                href: "https://x.com/ChouxCreamii",
+                title: "ChouxCreamii Twitter",
+                icon: <XLogoIcon weight="regular" size={24} />,
+              },
+              {
+                href: "https://www.tiktok.com/@chouxcreamii",
+                title: "ChouxCreamii TikTok",
+                icon: <TiktokLogoIcon weight="fill" size={24} />,
+              },
+              {
+                href: "https://www.facebook.com/ChouxCreamii",
+                title: "ChouxCreamii Facebook",
+                icon: <FacebookLogoIcon weight="fill" size={24} />,
+              },
+              {
+                href: "https://www.youtube.com/@ChouxCreamii",
+                title: "ChouxCreamii YouTube channel",
+                icon: <YoutubeLogoIcon weight="fill" size={24} />,
+              },
+            ].map((item, index) => (
+              <DockIcon key={index}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      href={item.href}
+                      isExternal
+                      className="flex items-center gap-1 text-current text-lg"
+                      title="ChouxCreamii Discord server"
+                      aria-label={item.title}
+                    >
+                      {item.icon}
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{item.title}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </DockIcon>
+            ))}
+          </Dock>
         </div>
       </footer>
     </>

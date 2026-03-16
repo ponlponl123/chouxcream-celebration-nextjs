@@ -1,13 +1,17 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Link } from "@heroui/link";
-import clsx from "clsx";
-
-import { Providers } from "./providers";
-
 import { siteConfig } from "@/config/site";
 import { fontJapanese, fontSans, fontThai } from "@/config/fonts";
+import { JetBrains_Mono } from "next/font/google";
 import Footer from "@/components/footer";
+import { Providers } from "./providers";
+import { cn } from "@/lib/utils";
+import clsx from "clsx";
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -33,11 +37,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="en">
+    <html
+      suppressHydrationWarning
+      lang="en"
+      className={cn("font-mono", jetbrainsMono.variable)}
+    >
       <head />
       <body
         className={clsx(
-          "min-h-screen text-foreground bg-background font-sans antialiased",
+          "min-h-screen text-foreground bg-background font-sans antialiased apply-custom-cursor",
           fontSans.variable,
           fontThai.variable,
           fontJapanese.variable,
