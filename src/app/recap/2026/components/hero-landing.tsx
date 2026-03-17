@@ -383,9 +383,10 @@ function HeroLanding({ onContentReady }: { onContentReady?: () => void }) {
                 <motion.div
                   key={"polaroid-" + index}
                   className={twMerge(
-                    "absolute top-0 left-0 pointer-events-none bg-white p-3 pb-16 shadow-xl brightness-75 -translate-1/2",
-                    item.aspect === "video" && "w-[26vw] min-w-lg aspect-video",
-                    item.aspect === "square" && "min-w-64 w-[13vw] max-w-80",
+                    "absolute top-0 left-0 pointer-events-none bg-white p-3 pb-16 shadow-xl brightness-75 -translate-1/2 transition-size duration-1600 ease-in-out",
+                    item.aspect === "video" &&
+                      "sm:w-[26vw] max-sm:min-w-sm sm:min-w-md aspect-video",
+                    item.aspect === "square" && "min-w-48 sm:w-[13vw] max-w-80",
                   )}
                   initial={{
                     opacity: 0,
