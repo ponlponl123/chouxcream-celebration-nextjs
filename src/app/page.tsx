@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import Countdown from "react-countdown";
-import { siteConfig } from "@/config/site";
 import CountdownRenderer from "@/app/countdown";
 import { AnimatePresence, motion } from "framer-motion";
 import { DiscordLogoIcon } from "@phosphor-icons/react/dist/ssr";

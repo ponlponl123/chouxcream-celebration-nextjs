@@ -2,8 +2,8 @@
 import React, { useEffect } from "react";
 import { useCustomCursor } from "@/context/customCursor";
 import { HeartIcon } from "@phosphor-icons/react/dist/ssr";
-import SplitText from "gsap/src/SplitText";
 import { twMerge } from "tailwind-merge";
+import SplitText from "gsap/SplitText";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 import gsap from "gsap";

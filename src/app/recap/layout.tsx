@@ -9,6 +9,7 @@ import { headers } from "next/headers";
 import { celebrationDate } from "@/config/date";
 
 export async function generateMetadata(
+  _props: { params: Promise<any> },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const header = await headers();
