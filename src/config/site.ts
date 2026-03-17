@@ -6,6 +6,7 @@ export const siteConfig = {
     "A celebratory gift for ChouxCream シュークリーム " +
     new Date().getFullYear() +
     ".",
+  template: "ChouxCream シュークリーム Celebration",
   links: {
     github: "https://github.com/ponlponl123/chouxcream-celebration-nextjs",
     discord: "https://ponl.link/chouxcream-disgd",

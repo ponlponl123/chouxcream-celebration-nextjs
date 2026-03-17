@@ -14,7 +14,7 @@ import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
-function Footer() {
+export const RecapSelector = () => {
   const pathname = usePathname();
   const isRecapPage = pathname.startsWith("/recap/");
   const RecapYear = isRecapPage
@@ -23,21 +23,7 @@ function Footer() {
       ? String(new Date().getFullYear())
       : null;
   const totalRecapCount = new Date().getFullYear() - 2025 + 1;
-  const [visible, setVisible] = React.useState(false);
-  React.useEffect(() => {
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 100) {
-        setVisible(true);
-      } else {
-        setVisible(false);
-      }
-    });
-    return () => {
-      window.removeEventListener("scroll", () => {});
-    };
-  }, []);
-
-  const RecapSelector = () => (
+  return (
     <div className="flex flex-wrap items-center justify-center gap-4">
       {Array.from({ length: totalRecapCount }, (_, index) => (
         <Link
@@ -54,6 +40,22 @@ function Footer() {
       ))}
     </div>
   );
+};
+
+function Footer() {
+  const [visible, setVisible] = React.useState(false);
+  React.useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 100) {
+        setVisible(true);
+      } else {
+        setVisible(false);
+      }
+    });
+    return () => {
+      window.removeEventListener("scroll", () => {});
+    };
+  }, []);
 
   return (
     <>

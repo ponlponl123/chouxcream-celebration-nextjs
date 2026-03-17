@@ -16,8 +16,12 @@ export async function generateMetadata(
   const pathname = header.get("x-current-path");
   const year = pathname?.split("/recap/")[1];
 
+  if (!year || typeof year !== "string" || !Number(year) || year.length !== 4) {
+    return {};
+  }
+
   return {
-    title: `ChouxCream シュークリーム year Celebration`,
+    title: `${year}`,
     description:
       "A celebratory gift for ChouxCream シュークリーム " + year + ".",
   };
@@ -27,8 +31,12 @@ async function RecapLayout({ children }: { children: React.ReactNode }) {
   const header = await headers();
   const pathname = header.get("x-current-path");
   const year = pathname?.split("/recap/")[1];
-  const now = new Date();
 
+  if (!year || typeof year !== "string" || !Number(year) || year.length !== 4) {
+    return <DefaultPage params={Promise.resolve({ year: String(year) })} />;
+  }
+
+  const now = new Date();
   const targetYear = Number(year) || now.getFullYear();
   const targetDate = dateBuilder(targetYear, celebrationDate);
 

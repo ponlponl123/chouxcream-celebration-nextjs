@@ -16,7 +16,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
+    template: `%s - ${siteConfig.template}`,
   },
   description: siteConfig.description,
   icons: {
@@ -42,7 +42,14 @@ export default function RootLayout({
       lang="en"
       className={cn("font-mono dark", jetbrainsMono.variable)}
     >
-      <head />
+      <head>
+        <link
+          rel="preload"
+          as="video"
+          href="https://static.ponlponl123.com/h.264/chouxproject/Comp%203.mp4"
+          type="video/mp4"
+        />
+      </head>
       <body
         className={clsx(
           "min-h-screen text-foreground bg-background font-sans antialiased apply-custom-cursor",

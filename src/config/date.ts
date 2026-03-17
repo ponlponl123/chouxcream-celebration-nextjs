@@ -9,7 +9,7 @@ export const celebrationDate = {
 export const debugDate: typeof celebrationDate = {
   day: 17,
   month: 3,
-  hour: 13,
-  minute: 10,
+  hour: 15,
+  minute: 58,
   second: 0,
 };

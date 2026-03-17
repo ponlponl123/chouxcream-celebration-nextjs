@@ -195,7 +195,7 @@ function Page() {
             </section>
             <section
               key="section-forcontributions"
-              className="h-max flex flex-col items-center w-full z-10 py-12 mt-24 mb-16 apply-default-transition"
+              className="h-max flex flex-col items-center w-full z-10 py-12 mt-56 mb-16 apply-default-transition"
             >
               <GitMergeIcon size={32} weight="fill" />
               <motion.h2

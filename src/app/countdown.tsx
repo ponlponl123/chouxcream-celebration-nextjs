@@ -1,13 +1,7 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 
-export default function CountdownTimer({
-  days,
-  hours,
-  minutes,
-  seconds,
-  completed,
-}: any) {
+export default function CountdownTimer({ days, hours, minutes, seconds }: any) {
   const counter =
     "Countdown timer showing days, hours, minutes and seconds remaining";
 

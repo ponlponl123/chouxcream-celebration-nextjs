@@ -10,6 +10,7 @@ gsap.registerPlugin(SplitText);
 function HeroLanding({ onContentReady }: { onContentReady?: () => void }) {
   const introTlRef = useRef<any>(null);
   const introVideoRef = useRef<HTMLVideoElement>(null);
+  const [isIntroPlaying, setIsIntroPlaying] = React.useState(false);
   const [isIntroPlayed, setIsIntroPlayed] = React.useState(false);
   const [isContentReady, setIsContentReady] = React.useState(false);
   const hasTransitionedRef = useRef(false);
@@ -23,6 +24,10 @@ function HeroLanding({ onContentReady }: { onContentReady?: () => void }) {
 
     introVideo.play().catch((error) => {
       console.error("Error playing intro video:", error);
+    });
+
+    introVideo.addEventListener("playing", () => {
+      setIsIntroPlaying(true);
     });
 
     const handleIntroEnded = () => {
@@ -99,7 +104,7 @@ function HeroLanding({ onContentReady }: { onContentReady?: () => void }) {
         key="background-video-intro"
         muted
         playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover z-50"
+        className="absolute top-0 left-0 w-full h-full object-cover z-50 bg-black"
       >
         <source
           src="https://static.ponlponl123.com/h.264/chouxproject/Comp%203.mp4"
@@ -109,11 +114,16 @@ function HeroLanding({ onContentReady }: { onContentReady?: () => void }) {
       </video>
       <div
         className={twMerge(
-          "absolute top-0 left-0 w-full h-full z-40 bg-white transition-opacity duration-[3s]",
+          "absolute top-0 left-0 w-full h-full z-40 transition-opacity duration-[3s]",
+          isIntroPlaying && "bg-white",
           isIntroPlayed && "opacity-0 pointer-events-none",
         )}
       />
-      <div
+      <motion.div
+        key="polaroids-intro-container"
+        initial={{ scale: 1.32 }}
+        animate={isIntroPlayed && { scale: 1 }}
+        transition={{ duration: 4.8, delay: 1, ease: "easeOut" }}
         className={twMerge(
           "absolute top-0 left-0 w-full h-full z-30 transition-opacity duration-[3s] overflow-hidden mask-gradient blur-[2px] saturate-150 brightness-50",
           !isIntroPlayed && "opacity-0 pointer-events-none",
@@ -350,7 +360,7 @@ function HeroLanding({ onContentReady }: { onContentReady?: () => void }) {
         })}
         <div className="absolute top-0 left-0 w-full h-full pointer-events-none bg-radial to-black/60 from-white/40" />
         <div className="absolute top-0 right-[27vw] translate-1/2 w-[64vw] h-[32vh] -rotate-32 pointer-events-none bg-radial to-transparent from-amber-500/60 brightness-125 bg-blend-lighten blur-[128px]" />
-      </div>
+      </motion.div>
     </div>
   );
 }
