@@ -9,7 +9,7 @@ function page() {
       path: "M167 72c19,-38 37,-56 75,-56 42,0 76,33 76,75 0,76 -76,151 -151,227 -76,-76 -151,-151 -151,-227 0,-42 33,-75 75,-75 38,0 57,18 76,56z",
     });
 
-    const duration = 12 * 1000;
+    const duration = 1 * 1000;
     const animationEnd = Date.now() + duration;
     let skew = 12;
 
@@ -19,7 +19,7 @@ function page() {
       skew = Math.max(0.8, skew - 0.001);
 
       confetti({
-        particleCount: 0.9,
+        particleCount: 1,
         startVelocity: 0,
         ticks: ticks,
         origin: {

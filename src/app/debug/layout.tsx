@@ -1,9 +1,25 @@
+"use client";
+import Sidebar from "@/components/dev/sidebar";
 import { GithubLogoIcon, HouseIcon } from "@phosphor-icons/react/dist/ssr";
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import React from "react";
 
-function DebuggerLayout({ children }: { children: React.ReactNode }) {
-  if (process.env.NODE_ENV !== "development")
+function DebuggerLayoutContent({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const ref = searchParams.get("ref");
+
+  const allowedOnly = ["/debug/workspace", "/debug/contributors"];
+  const isRefAllowed =
+    ref ===
+      process.env?.NEXT_PUBLIC_DEVELOPMENT_WORKSPACE_PUBLIC_ACCESS_TOKEN ||
+    "choux-edgy";
+
+  if (
+    process.env.NODE_ENV !== "development" &&
+    (!isRefAllowed || (isRefAllowed && !allowedOnly.includes(pathname)))
+  )
     return (
       <main>
         <div className="flex flex-col items-center justify-center h-screen">
@@ -31,7 +47,33 @@ function DebuggerLayout({ children }: { children: React.ReactNode }) {
       </main>
     );
 
-  return children;
+  return (
+    <>
+      <header className="flex flex-row items-center gap-2 px-4 py-2 h-10 border-b border-b-white/10 bg-black">
+        <img src="/favicon.ico" alt="dev portal logo" className="w-6" />
+        <h1 className="text-sm font-bold">Developer Portal</h1>
+      </header>
+      <main className="flex flex-row w-full h-full bg-white/5">
+        <Sidebar />
+        <div
+          className="relative bg-black h-[calc(100vh-3.5rem)] flex-1 min-w-0 m-2 ml-0 max-md:m-0 md:rounded-xl overflow-y-auto overflow-x-hidden p-4"
+          id="main-content"
+        >
+          {children}
+        </div>
+      </main>
+    </>
+  );
 }
 
-export default DebuggerLayout;
+export default function DebuggerLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <React.Suspense fallback={null}>
+      <DebuggerLayoutContent>{children}</DebuggerLayoutContent>
+    </React.Suspense>
+  );
+}
