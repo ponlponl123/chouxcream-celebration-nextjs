@@ -16,9 +16,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 function Footer() {
   const pathname = usePathname();
-  const isRecapPage = pathname.startsWith("/recap-");
+  const isRecapPage = pathname.startsWith("/recap/");
   const RecapYear = isRecapPage
-    ? pathname.split("/recap-")[1]
+    ? pathname.split("/recap/")[1]
     : pathname === "/"
       ? String(new Date().getFullYear())
       : null;
@@ -42,7 +42,7 @@ function Footer() {
       {Array.from({ length: totalRecapCount }, (_, index) => (
         <Link
           key={index}
-          href={index === totalRecapCount - 1 ? "/" : `/recap-${2025 + index}`}
+          href={index === totalRecapCount - 1 ? "/" : `/recap/${2025 + index}`}
           className={twMerge(
             "bg-amber-400/10 text-amber-400 px-1 py-0.5 rounded-sm text-sm",
             RecapYear === String(2025 + index) &&

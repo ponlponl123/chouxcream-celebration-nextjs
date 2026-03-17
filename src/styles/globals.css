@@ -7,7 +7,7 @@
 @config "../../tailwind.config.js";
 @plugin "daisyui";
 
-body.apply-custom-cursor * {
+body.apply-custom-cursor *:not(nextjs-portal) {
   cursor: none;
 }
 
@@ -50,7 +50,7 @@ body {
   will-change: transform;
 }
 
-.mailcard-hovered > *:not(.mailcard-section) {
+.mailcard-hovered > * > *:not(.mailcard-section) {
   filter: blur(2px) opacity(0.6);
 }
 
