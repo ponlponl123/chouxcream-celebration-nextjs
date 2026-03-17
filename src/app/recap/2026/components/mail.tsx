@@ -2,9 +2,13 @@
 import React, { useEffect } from "react";
 import { useCustomCursor } from "@/context/customCursor";
 import { HeartIcon } from "@phosphor-icons/react/dist/ssr";
+import SplitText from "gsap/src/SplitText";
 import { twMerge } from "tailwind-merge";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
+import gsap from "gsap";
+
+gsap.registerPlugin(SplitText);
 
 function Mail({
   onMailHovered,
@@ -101,7 +105,7 @@ function Mail({
           y: 6,
           filter: "blur(4px)",
           autoAlpha: 0,
-          stagger: 0.12,
+          stagger: 0.16,
           delay: 0.64,
         });
         if (!isActive) return;
