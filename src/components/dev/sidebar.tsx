@@ -2,6 +2,7 @@
 import {
   AirplaneLandingIcon,
   ArrowClockwiseIcon,
+  CaretLeftIcon,
   EnvelopeSimpleOpenIcon,
   HandHeartIcon,
   HeartIcon,
@@ -9,7 +10,7 @@ import {
   ListIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -44,6 +45,9 @@ export function SidebarActiveButton({
 
 function Sidebar() {
   const [visible, setVisible] = React.useState(false);
+  const searchParams = useSearchParams();
+  const ref = searchParams.get("ref");
+  const refQuery = ref ? `?ref=${ref}` : "";
 
   return (
     <>
@@ -68,11 +72,17 @@ function Sidebar() {
           <span className="text-xs text-foreground/10">Dev Workspace</span>
           <div className="flex-1 min-w-0 h-0.5 bg-foreground/10" />
         </div>
-        <SidebarActiveButton href="/debug/workspace" className="w-full">
+        <SidebarActiveButton
+          href={"/debug/workspace" + refQuery}
+          className="w-full"
+        >
           <HouseIcon weight="fill" size={16} />
           หน้าแรก
         </SidebarActiveButton>
-        <SidebarActiveButton href="/debug/contributors" className="w-full">
+        <SidebarActiveButton
+          href={"/debug/contributors" + refQuery}
+          className="w-full"
+        >
           <HandHeartIcon weight="fill" size={16} />
           ผู้มีส่วนร่วม
         </SidebarActiveButton>
@@ -94,20 +104,33 @@ function Sidebar() {
               </span>
             </div>
           )}
-          <SidebarActiveButton href="/debug/flying-heart" className="w-full">
+          <SidebarActiveButton
+            href={"/debug/flying-heart" + refQuery}
+            className="w-full"
+          >
             <HeartIcon weight="fill" size={16} />
             Flying Heart
           </SidebarActiveButton>
-          <SidebarActiveButton href="/debug/2026-intro" className="w-full">
+          <SidebarActiveButton
+            href={"/debug/2026-intro" + refQuery}
+            className="w-full"
+          >
             <AirplaneLandingIcon weight="fill" size={16} />
             2026 Intro
           </SidebarActiveButton>
-          <SidebarActiveButton href="/debug/2026-mail" className="w-full">
+          <SidebarActiveButton
+            href={"/debug/2026-mail" + refQuery}
+            className="w-full"
+          >
             <EnvelopeSimpleOpenIcon weight="fill" size={16} />
             2026 Mail
           </SidebarActiveButton>
         </div>
         <div className="mt-auto" />
+        <SidebarActiveButton href={"/"} className="w-full">
+          <CaretLeftIcon weight="bold" size={16} />
+          กลับหน้าแรก
+        </SidebarActiveButton>
         <button
           className={twMerge(
             "text-foreground/80 rounded-lg px-4 py-2 text-sm flex items-center justify-start w-full gap-2 apply-default-transition",

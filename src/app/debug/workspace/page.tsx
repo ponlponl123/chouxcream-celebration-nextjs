@@ -22,7 +22,9 @@ import {
 } from "@/components/ui/select";
 import {
   CheckCircleIcon,
+  CircleNotchIcon,
   CraneTowerIcon,
+  WrenchIcon,
   XCircleIcon,
   XIcon,
 } from "@phosphor-icons/react/dist/ssr";
@@ -34,20 +36,62 @@ import {
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-// for markup only, this will be replace by api.ponlponl123.com
-const devTasks = [
-  {
-    name: "รายการงานสำหรับนักพัฒนา",
-    date: "Mar 17 2025",
-    assign: ["Ponlponl123"],
-    status: false,
-  },
-];
+export type DevTask = {
+  id: number;
+  title: string;
+  created_date: string;
+  accepted_date: string;
+  canceled_date: string;
+  completed_date: string;
+  assigned: string[];
+  is_accepted: boolean;
+  is_canceled: boolean;
+  is_completed: boolean;
+  state: number;
+};
 
 function Page() {
+  const [devTasks, setDevTasks] = React.useState<DevTask[]>([]);
+  const [devTaskCount, setDevTaskCount] = React.useState(0);
   const now = new Date();
   const [targetYear, setTargetYear] = React.useState(now.getFullYear());
   const deadline = dateBuilder(now.getFullYear(), celebrationDate);
+
+  React.useEffect(() => {
+    if (targetYear < 2026) {
+      setDevTasks([]);
+      setDevTaskCount(0);
+      return;
+    }
+    fetch(
+      "https://api.ponlponl123.com/v1/services/choux/dev/tasks?year=" +
+        targetYear,
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setDevTasks(
+          (data as DevTask[]).map((task) => {
+            return {
+              ...task,
+              state: task.is_completed
+                ? 3
+                : task.is_canceled
+                  ? 2
+                  : task.is_accepted
+                    ? 1
+                    : 0,
+            };
+          }),
+        );
+      });
+    fetch(
+      "https://api.ponlponl123.com/v1/services/choux/dev/tasks/" + targetYear,
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setDevTaskCount(data.count);
+      });
+  }, [targetYear]);
 
   return (
     <>
@@ -138,21 +182,36 @@ function Page() {
               </TableCell>
             </TableRow>
           )}
-          {targetYear >= 2026 &&
-            devTasks.map((task, index) => (
+          {targetYear >= 2026 && devTasks.length === 0 ? (
+            <>
+              <TableRow>
+                <TableCell className="text-center" colSpan={5} rowSpan={2}>
+                  <div className="text-foreground/60 flex flex-col justify-center items-center gap-1">
+                    <CircleNotchIcon
+                      weight="bold"
+                      size={20}
+                      className="animate-spin"
+                    />
+                    <span>กำลังโหลด</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            </>
+          ) : (
+            devTasks.map((task: DevTask, index) => (
               <TableRow className="h-12" key={"task-" + index}>
                 <TableCell align="center" className="font-medium">
                   {index + 1}
                 </TableCell>
-                <TableCell>{task.name}</TableCell>
+                <TableCell>{task.title}</TableCell>
                 <TableCell>
-                  {new Date(task.date).toLocaleDateString("th-TH", {
+                  {new Date(task.created_date).toLocaleDateString("th-TH", {
                     dateStyle: "long",
                   })}
                 </TableCell>
                 <TableCell>
                   <div>
-                    {task.assign.map((assign, a_index) => (
+                    {task.assigned.map((assign, a_index) => (
                       <Tooltip key={"task-" + index + "-assign-" + a_index}>
                         <TooltipTrigger>
                           <Avatar>
@@ -181,15 +240,29 @@ function Page() {
                   <div
                     className={twMerge(
                       "flex items-center gap-2 px-2 py-0.5 rounded-full w-max text-xs",
-                      task.status
+                      task.state === 3
                         ? "text-emerald-500 bg-emerald-500/10"
-                        : "text-amber-500 bg-amber-500/10",
+                        : task.state === 2
+                          ? "text-rose-500 bg-rose-500/10"
+                          : task.state === 1
+                            ? "text-cyan-500 bg-cyan-500/10"
+                            : "text-amber-500 bg-amber-500/10",
                     )}
                   >
-                    {task.status ? (
+                    {task.state === 3 ? (
                       <>
                         <CheckCircleIcon weight="bold" size={16} />
                         ดำเนินการแล้ว
+                      </>
+                    ) : task.state === 2 ? (
+                      <>
+                        <XIcon weight="bold" size={16} />
+                        ยกเลิกแล้ว
+                      </>
+                    ) : task.state === 1 ? (
+                      <>
+                        <WrenchIcon weight="bold" size={16} />
+                        กำลังดำเนินการ
                       </>
                     ) : (
                       <>
@@ -200,13 +273,14 @@ function Page() {
                   </div>
                 </TableCell>
               </TableRow>
-            ))}
+            ))
+          )}
         </TableBody>
         <TableFooter>
           <TableRow>
             <TableCell colSpan={4}>งานทั้งหมด</TableCell>
             <TableCell className="text-right">
-              {devTasks.length} รายการ
+              {devTaskCount || devTasks.length} รายการ
             </TableCell>
           </TableRow>
         </TableFooter>

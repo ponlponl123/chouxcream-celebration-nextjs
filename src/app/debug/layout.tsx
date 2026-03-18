@@ -14,10 +14,10 @@ function DebuggerLayoutContent({ children }: { children: React.ReactNode }) {
   const isRefAllowed =
     ref ===
       process.env?.NEXT_PUBLIC_DEVELOPMENT_WORKSPACE_PUBLIC_ACCESS_TOKEN ||
-    "choux-edgy";
+    ref === "choux-edgy";
 
   if (
-    process.env.NODE_ENV !== "development" &&
+    process.env.NODE_ENV === "development" &&
     (!isRefAllowed || (isRefAllowed && !allowedOnly.includes(pathname)))
   )
     return (

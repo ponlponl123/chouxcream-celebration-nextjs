@@ -2,7 +2,11 @@
 import React, { useRef } from "react";
 import { TConductorInstance } from "react-canvas-confetti/dist/types/index";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
-import { GitMergeIcon, HeartIcon } from "@phosphor-icons/react/dist/ssr";
+import {
+  FlaskIcon,
+  GitMergeIcon,
+  HeartIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import { Button } from "@heroui/button";
@@ -10,6 +14,7 @@ import { Button } from "@heroui/button";
 import "@/styles/recap-2026.css";
 import Mail from "./components/mail";
 import HeroLanding from "./components/hero-landing";
+import Link from "next/link";
 
 function Page() {
   const controller = useRef<TConductorInstance | null>(null);
@@ -195,29 +200,63 @@ function Page() {
             </section>
             <section
               key="section-forcontributions"
-              className="h-max flex flex-col items-center w-full z-10 py-12 mt-56 mb-16 apply-default-transition"
+              className="h-max justify-items-center w-max mx-auto z-10 py-12 mt-56 mb-16 apply-default-transition grid grid-cols-1 md:grid-cols-2 relative"
             >
-              <GitMergeIcon size={32} weight="fill" />
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="text-sm font-bold mb-6 mt-4"
-              >
-                มีส่วนร่วมในการสร้าง ChouxCream Celebration ในปีหน้า!
-              </motion.h2>
-              <Button
-                as="a"
-                href="https://github.com/ponlponl123/chouxcream-celebration-nextjs"
-                size="sm"
-                color="warning"
-                className="-mt-2"
-                radius="full"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Fork now!
-              </Button>
+              <div className="w-full max-w-xs p-6 flex flex-col items-start justify-start gap-4 bg-foreground/10 rounded-2xl max-md:rounded-b-none md:rounded-r-none">
+                <GitMergeIcon size={32} weight="fill" />
+                <motion.h2
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-sm font-medium"
+                >
+                  มีส่วนร่วมในการสร้าง ChouxCream Celebration ในปีหน้า! 🎉
+                </motion.h2>
+                <p className="-mt-2 text-xs text-foreground/60">
+                  เรากำลังพัฒนา ChouxCream Recap ปี 2027 อยู่เลย,
+                  หากมีไอเดียเจ๋งๆ อย่าลังเลที่จะแชร์กับเรา!
+                </p>
+                <Button
+                  as={Link}
+                  href="https://github.com/ponlponl123/chouxcream-celebration-nextjs"
+                  size="sm"
+                  color="warning"
+                  radius="full"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Fork เลย!
+                </Button>
+              </div>
+              <div className="w-full max-w-xs p-6 flex flex-col items-start justify-start gap-4 bg-foreground/5 rounded-2xl max-md:rounded-t-none md:rounded-l-none">
+                <FlaskIcon size={32} weight="fill" />
+                <motion.h2
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-sm font-medium"
+                >
+                  รับชมแผนการพัฒนา ChouxCream Celebration 🧪
+                </motion.h2>
+                <p className="-mt-2 text-xs text-foreground/60">
+                  นี่คือตารางการพัฒนาของเรา
+                </p>
+                <Button
+                  as={Link}
+                  href={
+                    "/debug/workspace?ref=" +
+                    (process.env
+                      .NEXT_PUBLIC_DEVELOPMENT_WORKSPACE_PUBLIC_ACCESS_TOKEN ||
+                      "choux-edgy")
+                  }
+                  size="sm"
+                  color="warning"
+                  radius="full"
+                  variant="flat"
+                >
+                  ดูแผนการพัฒนา
+                </Button>
+              </div>
             </section>
           </div>
         )}
